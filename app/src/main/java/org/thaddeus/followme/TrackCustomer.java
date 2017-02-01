@@ -12,6 +12,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import java.util.Date;
 
 
 /**
@@ -19,13 +20,16 @@ import com.android.volley.toolbox.Volley;
  */
 public class TrackCustomer {
 
-
 	private Context context;
+	private String server = "192.168.0.14";
 
 	public TrackCustomer(Context context) {
 		this.context = context;
 	}
 
+	public void setServer(String server) {
+		this.server = server;
+	}
 
 	public void requestServer() {
 		
@@ -42,8 +46,12 @@ public class TrackCustomer {
 
 		// Start the queue
 		queue.start();
-		
-		String url ="http://192.168.0.15";
+
+		String baseurl ="http://"+server+"/admin/track";
+
+		Date now = new Date(); 
+
+		String url=baseurl+ "?timestamp="+now.getTime()/1000 + "&lat=44.3&lon=1.56";
 
 		// Request a string response from the provided URL.
 		StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

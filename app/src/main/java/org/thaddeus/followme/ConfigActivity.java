@@ -15,6 +15,8 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         
+        final TrackCustomer spyingForYou = new TrackCustomer(getApplicationContext());
+        
         final EditText editServer = (EditText) findViewById(R.id.editServer);
         
         Button sendButton = (Button) findViewById(R.id.sendButton);
@@ -26,6 +28,8 @@ public class ConfigActivity extends AppCompatActivity {
                
                String message = null;
                if(server!= null && server.length()>0) {
+                   spyingForYou.setServer(server);
+                   spyingForYou.requestServer();
                    message = "Sended to "+server;
                } else {
                    message = "No server defined";
