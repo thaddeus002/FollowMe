@@ -18,8 +18,11 @@ public class ConfigActivity extends AppCompatActivity {
         final TrackCustomer spyingForYou = new TrackCustomer(getApplicationContext());
         
         final EditText editServer = (EditText) findViewById(R.id.editServer);
+        final EditText editPeriod = (EditText) findViewById(R.id.editPeriod);
         
         Button sendButton = (Button) findViewById(R.id.sendButton);
+        Button startButton = (Button) findViewById(R.id.startButton);
+        Button stopButton = (Button) findViewById(R.id.stopButton);
         
         sendButton.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -38,5 +41,27 @@ public class ConfigActivity extends AppCompatActivity {
                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
            } 
         });
+        
+        startButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+           }
+       });
+               
+        stopButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {  
+           }
+       });  
+    }   
+       
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+       
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }
