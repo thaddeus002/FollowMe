@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ConfigActivity extends AppCompatActivity {
 
@@ -50,10 +52,19 @@ public class ConfigActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               context.startService(new Intent(context, FollowService.class));
+               Intent serviceIntent = new Intent(context, FollowService.class);
+               Bundle serviceBundle = new Bundle(1);
+               ArrayList<String> serviceArgs = new ArrayList<String>(2);
+               String server=editServer.getText().toString();
+               String period=editPeriod.getText().toString();
+               serviceArgs.add(server);
+               serviceArgs.add(period);
+               serviceBundle.putStringArrayList("serviceArgs", serviceArgs);
+               serviceIntent.putExtra("args", serviceBundle);
+               context.startService(serviceIntent);
            }
        });
-               
+
         stopButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {  

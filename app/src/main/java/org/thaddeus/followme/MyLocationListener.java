@@ -12,17 +12,16 @@ import android.content.Context;
  */
 public class MyLocationListener implements LocationListener {
 
-	private Service main;
 	private Context context;
-	private String server = "192.168.0.15";
+	private String server;
 	private Location location = null;
 
-	/** Which of the two(context or service) may we keep */
-	public MyLocationListener(Context context, Service main) {
-		this.main = main;
+	public MyLocationListener(Context context, String server) {
 		this.context = context;
+		this.server = server;
 	}
 
+	@Deprecated
 	public void setServer(String server) {
 		this.server = server;
 	}

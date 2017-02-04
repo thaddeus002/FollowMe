@@ -3,6 +3,7 @@ package org.thaddeus.followme;
 import android.app.Service;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,15 +13,20 @@ import android.widget.Toast;
 
 public class FollowService extends Service {
 	
+	// the default server is in a local network
+	private final static String DEFAULT_SERVER = "192.168.0.15";
+
 	private LocationManager locationManager = null;
 	private MyLocationListener myListener;
 	private String provider;
 	
+	// server name or IP
+	private String server = DEFAULT_SERVER;
+	// in minuts
+	private int period = 60;
+	
 	@Override
 	public void onCreate() {
-		
-		
-		
 		super.onCreate();
 	}
 	
@@ -29,18 +35,22 @@ public class FollowService extends Service {
 		super.onStartCommand(intent, flags, startId);
 		//TODO use also button
 		showMessage("Starting service");
+		
+		Bundle bundle = intent.getBundleExtra("args");
+		
+		if(bundle != null) {
+			server = bundle.getStringArrayList("serviceArgs").get(0);
+			period = Integer.parseInt(bundle.getStringArrayList("serviceArgs").get(1));
+		}
+		
 		initGPS();
 		return START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	// don't exist in Service - TODO find if there is one method to override.
-	public void onStopCommand(Intent intent) {
 		showMessage("Stopping service");
+		super.onDestroy();
 	}
 
 	@Override
@@ -58,15 +68,15 @@ public class FollowService extends Service {
 		}
 		if(provider != null) {
 			Location location = locationManager.getLastKnownLocation(provider);
-		    myListener=new MyLocationListener(this, this);
+		    myListener=new MyLocationListener(this, server);
 		    
 		    if(location!=null) {
 				myListener.onLocationChanged(location);
 			}
-			// condition for updating pos : at least 20m and 1 minuts
-			//locationManager.requestLocationUpdates(provider, 60*1000, 20, myListener);
+			// condition for updating pos : at least 20m and 2 minuts
+			//locationManager.requestLocationUpdates(provider, period*60*1000, 20, myListener);
 			//for testing
-			locationManager.requestLocationUpdates(provider, 1000, 1, myListener);
+			locationManager.requestLocationUpdates(provider, 2*1000, 1, myListener);
 		}
 	}
 	
