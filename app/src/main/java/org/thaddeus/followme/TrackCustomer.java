@@ -16,22 +16,19 @@ import java.util.Date;
 
 
 /**
- * This will send data to a track server.
+ * This will send data to a track server with the method {@link requestServer()}.
  */
 public class TrackCustomer {
 
 	private Context context;
-	private String server = "192.168.0.14";
+	private String server;
 
-	public TrackCustomer(Context context) {
+	public TrackCustomer(Context context, String server) {
 		this.context = context;
-	}
-
-	public void setServer(String server) {
 		this.server = server;
 	}
 
-	public void requestServer() {
+	public void requestServer(double lat, double lon) {
 		
 		RequestQueue queue;
 
@@ -51,7 +48,7 @@ public class TrackCustomer {
 
 		Date now = new Date(); 
 
-		String url=baseurl+ "?timestamp="+now.getTime()/1000 + "&lat=44.3&lon=1.56";
+		String url=baseurl+ "?timestamp="+now.getTime()/1000 + "&lat="+lat+"&lon="+lon;
 
 		// Request a string response from the provided URL.
 		StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

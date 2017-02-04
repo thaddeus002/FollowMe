@@ -1,6 +1,8 @@
 package org.thaddeus.followme;
 
 import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
@@ -10,12 +12,15 @@ import android.widget.Toast;
 
 public class ConfigActivity extends AppCompatActivity {
 
+    private Context context = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config);
         
-        final TrackCustomer spyingForYou = new TrackCustomer(getApplicationContext());
+        context = getApplicationContext();
+        
+        setContentView(R.layout.activity_config);
         
         final EditText editServer = (EditText) findViewById(R.id.editServer);
         final EditText editPeriod = (EditText) findViewById(R.id.editPeriod);
@@ -31,26 +36,28 @@ public class ConfigActivity extends AppCompatActivity {
                
                String message = null;
                if(server!= null && server.length()>0) {
-                   spyingForYou.setServer(server);
-                   spyingForYou.requestServer();
+                   TrackCustomer spyingForYou = new TrackCustomer(getApplicationContext(), server);
+                   spyingForYou.requestServer(43.6, 1.25);
                    message = "Sended to "+server;
                } else {
                    message = "No server defined";
                }
                
-               Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+               showMessage(message);
            } 
         });
         
         startButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
+               context.startService(new Intent(context, FollowService.class));
            }
        });
                
         stopButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {  
+               context.stopService(new Intent(context, FollowService.class));
            }
        });  
     }   
@@ -63,5 +70,9 @@ public class ConfigActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+    }
+    
+    private void showMessage(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }
