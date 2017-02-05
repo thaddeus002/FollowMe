@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.Toast;
+import java.lang.NumberFormatException;
 
 
 public class FollowService extends Service {
@@ -36,11 +37,25 @@ public class FollowService extends Service {
 		//TODO use also button
 		showMessage("Starting service");
 		
+		period = 0;
 		Bundle bundle = intent.getBundleExtra("args");
 		
 		if(bundle != null) {
 			server = bundle.getStringArrayList("serviceArgs").get(0);
-			period = Integer.parseInt(bundle.getStringArrayList("serviceArgs").get(1));
+			try {
+		        period = Integer.parseInt(bundle.getStringArrayList("serviceArgs").get(1));
+		    } catch(NumberFormatException e) {
+				period = 0;
+			}
+		}
+		
+		if(period <= 0 || "".equals(server)) {
+		    return START_NOT_STICKY;
+		}
+		
+		if(period > 1440) {
+		    // Period can be more than one day
+		    period = 1440;
 		}
 		
 		initGPS();
