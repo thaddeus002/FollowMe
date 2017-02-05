@@ -16,15 +16,18 @@ public class FollowService extends Service {
 	
 	// the default server is in a local network
 	private final static String DEFAULT_SERVER = "192.168.0.15";
+	// the default period is an hour
+	private final static int DEFAULT_PERIOD = 60;
+	
 
 	private LocationManager locationManager = null;
 	private MyLocationListener myListener;
 	private String provider;
 	
 	// server name or IP
-	private String server = DEFAULT_SERVER;
+	private String server;
 	// in minuts
-	private int period = 60;
+	private int period;
 	
 	@Override
 	public void onCreate() {
@@ -34,8 +37,8 @@ public class FollowService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
-		//TODO use also button
-		showMessage("Starting service");
+
+		String message = "Starting service";
 		
 		period = 0;
 		Bundle bundle = intent.getBundleExtra("args");
@@ -49,15 +52,19 @@ public class FollowService extends Service {
 			}
 		}
 		
-		if(period <= 0 || "".equals(server)) {
-		    return START_NOT_STICKY;
-		}
-		
-		if(period > 1440) {
+		if(period <= 0) {
+		    period = DEFAULT_PERIOD;
+		} else  if(period > 1440) {
 		    // Period can be more than one day
 		    period = 1440;
 		}
 		
+		if ("".equals(server)) {
+		    server = DEFAULT_SERVER;
+			message += "\nwith default server";
+		}
+		
+		showMessage(message);
 		initGPS();
 		return START_STICKY;
 	}
